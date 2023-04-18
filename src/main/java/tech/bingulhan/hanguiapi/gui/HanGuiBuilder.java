@@ -2,6 +2,7 @@ package tech.bingulhan.hanguiapi.gui;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -12,11 +13,15 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import tech.bingulhan.hanguiapi.gui.data.GuiData;
 import tech.bingulhan.hanguiapi.gui.item.GuiItem;
 
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * @author BingulHan
@@ -30,7 +35,8 @@ public final class HanGuiBuilder implements Listener {
 
     private Random random;
 
-    private String guiTitle;
+    @Setter
+    private String guiTitle = "";
 
     private Size size;
 
@@ -41,8 +47,9 @@ public final class HanGuiBuilder implements Listener {
     @Getter
     private JavaPlugin plugin;
 
+    private List<GuiData> dataList;
 
-    public HanGuiBuilder(@NotNull HanGuiBuilder.Size size, @NotNull String guiTitle, JavaPlugin pl) {
+    public HanGuiBuilder(@NotNull HanGuiBuilder.Size size, @NotNull String guiTitle, @NotNull JavaPlugin pl) {
 
         random = new Random();
         this.size = size;
@@ -52,15 +59,64 @@ public final class HanGuiBuilder implements Listener {
 
         this.plugin = pl;
 
-        loadGui();
+        dataList = new ArrayList<>();
+
     }
 
-    public final HanGuiBuilder setAccessibleOnDragItems(boolean value) {
+    public HanGuiBuilder(@NotNull HanGuiBuilder.Size size, @NotNull JavaPlugin pl) {
+
+        random = new Random();
+        this.size = size;
+        this.players = new LinkedHashSet<>();
+        this.itemHashMap = new HashMap<>();
+
+        this.plugin = pl;
+
+        dataList = new ArrayList<>();
+
+    }
+
+
+
+    public Optional<GuiData> getData(@NotNull String key) {
+
+        for (GuiData guiData : dataList) {
+            if (guiData.getKey().equals(key)) {
+                return Optional.of(guiData);
+            }
+        }
+
+        return Optional.empty();
+    }
+
+    public <T> boolean addData(@NotNull String key,@NotNull T t) {
+        if (dataList.stream().anyMatch(guiData -> guiData.getT().equals(key))) {
+            Bukkit.getLogger().info("d");
+            return false;
+        }
+
+        dataList.add(new GuiData<T>(key, t));
+
+        return true;
+    }
+
+    public boolean removeData(@NotNull String key) {
+        if (!getData(key).isPresent()) {
+            return false;
+        }
+        dataList.remove(getData(key).get());
+        return true;
+    }
+
+    public final HanGuiBuilder setAccessibleOnDragItems(@NotNull boolean value) {
         accessibleOnDragItems = value;
         return this;
     }
 
     protected void loadGui() {
+
+        Objects.nonNull(guiTitle);
+        Objects.nonNull(this.plugin);
 
         id = this.random.nextInt(1000);
         inventory = Bukkit.createInventory(null,this.size.size, ChatColor.translateAlternateColorCodes('&', guiTitle));
@@ -71,7 +127,7 @@ public final class HanGuiBuilder implements Listener {
 
     }
 
-    public final HanGuiBuilder addItem(int slot, GuiItem item) {
+    public final HanGuiBuilder addItem(@NotNull int slot, @NotNull GuiItem item) {
 
         if (slot > size.size) {
             return this;
@@ -85,16 +141,17 @@ public final class HanGuiBuilder implements Listener {
         return this;
     }
 
-    public final HanGuiBuilder addPlayer(OfflinePlayer player) {
+    public final HanGuiBuilder addPlayer(@NotNull OfflinePlayer player) {
         players.add(player);
         return this;
     }
 
-    public final HanGuiBuilder removePlayer(OfflinePlayer player) {
+    public final HanGuiBuilder removePlayer(@NotNull OfflinePlayer player) {
         players.remove(player);
         return this;
     }
     public final void open() {
+        loadGui();
 
         for (int slot : itemHashMap.keySet()) {
             if (slot > size.size) {
@@ -102,7 +159,10 @@ public final class HanGuiBuilder implements Listener {
             }
 
             GuiItem item = itemHashMap.get(slot);
-            inventory.setItem(slot, item.getItem());
+
+            ItemStack itemStack = new ItemStack(item.getItem());
+
+            inventory.setItem(slot, itemStack);
         }
 
 
@@ -124,7 +184,7 @@ public final class HanGuiBuilder implements Listener {
     }
 
     @EventHandler
-    public void onClick(InventoryClickEvent event) {
+    public void onClick(@NotNull InventoryClickEvent event) {
         if (event.getInventory().getMaxStackSize() == id) {
             if (!this.accessibleOnDragItems) {
                 event.setCancelled(true);
@@ -140,7 +200,7 @@ public final class HanGuiBuilder implements Listener {
     }
 
     @EventHandler
-    public void onClose(InventoryCloseEvent event) {
+    public void onClose(@NotNull InventoryCloseEvent event) {
 
         if (event.getInventory().getMaxStackSize() == id) {
             players.remove(event.getPlayer());
@@ -151,6 +211,4 @@ public final class HanGuiBuilder implements Listener {
         }
 
     }
-
-
 }
