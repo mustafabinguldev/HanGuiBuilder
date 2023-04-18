@@ -3,7 +3,7 @@ HanGuiBuilder is a Minecraft Spigot plugin API that is designed for developers. 
 
 Maven:
 ```
-<repositories>
+        <repositories>
 		<repository>
 		    <id>jitpack.io</id>
 		    <url>https://jitpack.io</url>
