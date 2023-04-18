@@ -1,6 +1,7 @@
 What is this project?
 HanGuiBuilder is a Minecraft Spigot plugin API that is designed for developers. It simplifies the process of building GUIs and assigning commands to items within them, and is compatible with all versions of Minecraft.
 
+Maven:
 ```
 <repositories>
 		<repository>
