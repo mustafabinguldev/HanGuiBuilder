@@ -26,13 +26,13 @@ Example:
         HanGuiBuilder guiBuilder = new HanGuiBuilder(HanGuiBuilder.Size.THREE, this).
                 setAccessibleOnDragItems(false).
                 addPlayer(event.getPlayer()).
-                addItem(1, new GuiItem(new ItemStack(Material.GRASS), (p,g) -> {
+                addItem(1, new GuiItem(new ItemStack(Material.GRASS), (p,g,slot) -> {
 
                     p.sendMessage(ChatColor.GREEN+"You touched the grass!");
                     g.getPlugin().getServer().broadcastMessage(""+p.getName()+" touched the grass!");
 
                 })).
-                addItem(2, new GuiItem(information, (p,g) -> {
+                addItem(2, new GuiItem(information, (p,g,slot) -> {
 
                     if (g.getData("information").isPresent()) {
                         p.sendMessage(ChatColor.WHITE+g.getData("information").get().getT().toString());
