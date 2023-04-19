@@ -193,7 +193,7 @@ public final class HanGuiBuilder implements Listener {
             int slot = event.getSlot();
             if (itemHashMap.get(slot) != null) {
                 GuiItem item = itemHashMap.get(slot);
-                item.getAttraction().execute(((Player) event.getWhoClicked()), this);
+                item.getAttraction().execute(((Player) event.getWhoClicked()), this, slot);
             }
 
         }

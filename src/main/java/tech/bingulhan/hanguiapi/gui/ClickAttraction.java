@@ -7,6 +7,6 @@ import org.bukkit.entity.Player;
  */
 public interface ClickAttraction {
 
-    void execute(Player player, HanGuiBuilder guiBuilder);
+    void execute(Player player, HanGuiBuilder guiBuilder, int slot);
 
 }
