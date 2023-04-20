@@ -14,14 +14,12 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import tech.bingulhan.hanguiapi.gui.data.GuiData;
 import tech.bingulhan.hanguiapi.gui.item.GuiItem;
 
 import java.util.*;
-import java.util.regex.Pattern;
 
 /**
  * @author BingulHan
@@ -108,6 +106,29 @@ public final class HanGuiBuilder implements Listener {
         return true;
     }
 
+    public int getDataSıze() {
+        return dataList.size();
+    }
+
+    public List<GuiData> getDataList() {
+        return dataList;
+    }
+
+    public <T> List<GuiData<T>> getDataList(Class<T> type) {
+        List<GuiData<T>> result = new ArrayList<>();
+        dataList.forEach(guiData -> {
+
+            if (guiData.getT().getClass().equals(type)) {
+                result.add(guiData);
+            }
+
+        });
+
+        return result;
+
+    }
+
+
     public final HanGuiBuilder setAccessibleOnDragItems(@NotNull boolean value) {
         accessibleOnDragItems = value;
         return this;
@@ -186,6 +207,7 @@ public final class HanGuiBuilder implements Listener {
     @EventHandler
     public void onClick(@NotNull InventoryClickEvent event) {
         if (event.getInventory().getMaxStackSize() == id) {
+
             if (!this.accessibleOnDragItems) {
                 event.setCancelled(true);
             }
