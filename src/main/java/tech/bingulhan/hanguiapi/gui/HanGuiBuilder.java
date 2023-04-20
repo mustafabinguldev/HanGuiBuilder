@@ -20,6 +20,7 @@ import tech.bingulhan.hanguiapi.gui.data.GuiData;
 import tech.bingulhan.hanguiapi.gui.item.GuiItem;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author BingulHan
@@ -115,16 +116,7 @@ public final class HanGuiBuilder implements Listener {
     }
 
     public <T> List<GuiData<T>> getDataList(Class<T> type) {
-        List<GuiData<T>> result = new ArrayList<>();
-        dataList.forEach(guiData -> {
-
-            if (guiData.getT().getClass().equals(type)) {
-                result.add(guiData);
-            }
-
-        });
-
-        return result;
+        return dataList.stream().filter(guiData -> guiData.getT().equals(type)).collect(Collectors.toList());
 
     }
 
