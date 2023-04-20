@@ -12,7 +12,7 @@ HanGuiBuilder is a Minecraft Spigot plugin API that is designed for developers. 
 	<dependency>
 	    <groupId>com.github.BingulHan</groupId>
 	    <artifactId>HanGuiBuilder</artifactId>
-	    <version>1.2</version>
+	    <version>1.3</version>
 	</dependency>
 ```
 Example:
