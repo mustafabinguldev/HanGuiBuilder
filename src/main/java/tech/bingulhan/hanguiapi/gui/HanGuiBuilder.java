@@ -2,7 +2,6 @@ package tech.bingulhan.hanguiapi.gui;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -115,7 +114,7 @@ public final class HanGuiBuilder implements Listener {
         return dataList;
     }
 
-    public <T> List<GuiData<T>> getDataList(Class<T> type) {
+    public List getDataList(Class type) {
         return dataList.stream().filter(guiData -> guiData.getT().equals(type)).collect(Collectors.toList());
 
     }
