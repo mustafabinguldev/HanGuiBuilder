@@ -202,6 +202,20 @@ public final class HanGuiBuilder implements Listener {
         }
     }
 
+    public final void update() {
+        inventory.clear();
+        for (int slot : itemHashMap.keySet()) {
+            if (slot > size.size) {
+                continue;
+            }
+
+            GuiItem item = itemHashMap.get(slot);
+
+            ItemStack itemStack = new ItemStack(item.getItem());
+
+            inventory.setItem(slot, itemStack);
+        }
+    }
     public enum Size {
         ONE(9),DOUBLE(18),THREE(27),FOUR(36),FIVE(45),SIX(54);
         public int size;
