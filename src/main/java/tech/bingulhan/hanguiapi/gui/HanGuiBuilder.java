@@ -87,6 +87,8 @@ public final class HanGuiBuilder implements Listener {
         return Optional.empty();
     }
 
+
+
     public <T> boolean addData(@NotNull String key,@NotNull T t) {
         if (dataList.stream().anyMatch(guiData -> guiData.getT().equals(key))) {
             Bukkit.getLogger().info("d");
@@ -97,6 +99,19 @@ public final class HanGuiBuilder implements Listener {
 
         return true;
     }
+
+    public <T> boolean replaceData(@NotNull String key,@NotNull T t) {
+        if (dataList.stream().anyMatch(guiData -> guiData.getT().equals(key))) {
+            removeData(key);
+            addData(key, t);
+            return true;
+        }
+
+        dataList.add(new GuiData<T>(key, t));
+
+        return false;
+    }
+
 
     public boolean removeData(@NotNull String key) {
         if (!getData(key).isPresent()) {
