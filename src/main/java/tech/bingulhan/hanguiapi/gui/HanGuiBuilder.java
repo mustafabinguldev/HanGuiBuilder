@@ -29,6 +29,8 @@ public final class HanGuiBuilder implements Listener {
     private int id;
     private Inventory inventory;
 
+    private CloseAttraction closeAttraction;
+
     private HashMap<Integer, GuiItem> itemHashMap;
 
     private Random random;
@@ -47,6 +49,11 @@ public final class HanGuiBuilder implements Listener {
 
     private List<GuiData> dataList;
 
+
+    public final void setCloseAttraction(CloseAttraction attraction) {
+        this.closeAttraction = attraction;
+    }
+
     public HanGuiBuilder(@NotNull HanGuiBuilder.Size size, @NotNull String guiTitle, @NotNull JavaPlugin pl) {
 
         random = new Random();
@@ -56,6 +63,7 @@ public final class HanGuiBuilder implements Listener {
         this.itemHashMap = new HashMap<>();
 
         this.plugin = pl;
+
 
         dataList = new ArrayList<>();
 
@@ -225,7 +233,7 @@ public final class HanGuiBuilder implements Listener {
     }
 
     @EventHandler
-    public void onClick(@NotNull InventoryClickEvent event) {
+    public void onClickEvent(@NotNull InventoryClickEvent event) {
         if (event.getInventory().getMaxStackSize() == id) {
 
             if (!this.accessibleOnDragItems) {
@@ -242,13 +250,17 @@ public final class HanGuiBuilder implements Listener {
     }
 
     @EventHandler
-    public void onClose(@NotNull InventoryCloseEvent event) {
+    public void onCloseEvent(@NotNull InventoryCloseEvent event) {
 
         if (event.getInventory().getMaxStackSize() == id) {
             players.remove(event.getPlayer());
 
             if (players.size()<1) {
                 HandlerList.unregisterAll(this);
+            }
+
+            if (closeAttraction!=null) {
+                closeAttraction.run(((Player) event.getPlayer()), this);
             }
         }
 
